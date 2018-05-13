@@ -6,8 +6,8 @@ var escapeShell = function(cmd) {
     return '"'+cmd.replace(/(["\s'$`\\])/g,'\\$1')+'"';
 };
 
-function connectToWifi(config, ap, callback) {
-  var commandStr = "nmcli -w 10 device wifi connect '" + ap.ssid + "'" +
+function connectToWifi(config, ap, timeout = 10, callback) {
+  var commandStr = "nmcli -w " + timeout + " device wifi connect '" + ap.ssid + "'" +
       " password " + "'" + ap.password + "'" ;
 
   if (config.iface) {
@@ -24,12 +24,12 @@ function connectToWifi(config, ap, callback) {
 
 module.exports = function (config) {
 
-    return function(ap, callback) {
+    return function(ap, timeout, callback) {
       if (callback) {
-        connectToWifi(config, ap, callback);
+        connectToWifi(config, ap, timeout, callback);
       } else {
         return new Promise(function (resolve, reject) {
-          connectToWifi(config, ap, function (err) {
+          connectToWifi(config, ap, timeout, function (err) {
             if (err) {
               reject(err);
             } else {

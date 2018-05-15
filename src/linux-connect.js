@@ -24,7 +24,7 @@ function connectToWifi(config, ap, callback, timeout) {
 
 module.exports = function (config) {
 
-    return function(ap, timeout, callback) {
+    return function(ap, callback, timeout) {
       if (callback) {
         connectToWifi(config, ap, callback, timeout);
       } else {

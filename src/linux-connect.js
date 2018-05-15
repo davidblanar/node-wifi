@@ -6,7 +6,7 @@ var escapeShell = function(cmd) {
     return '"'+cmd.replace(/(["\s'$`\\])/g,'\\$1')+'"';
 };
 
-function connectToWifi(config, ap, timeout = 10, callback) {
+function connectToWifi(config, ap, callback, timeout) {
   var commandStr = "nmcli -w " + timeout + " device wifi connect '" + ap.ssid + "'" +
       " password " + "'" + ap.password + "'" ;
 
@@ -26,16 +26,16 @@ module.exports = function (config) {
 
     return function(ap, timeout, callback) {
       if (callback) {
-        connectToWifi(config, ap, timeout, callback);
+        connectToWifi(config, ap, callback, timeout);
       } else {
         return new Promise(function (resolve, reject) {
-          connectToWifi(config, ap, timeout, function (err) {
+          connectToWifi(config, ap, function (err) {
             if (err) {
               reject(err);
             } else {
               resolve();
             }
-          })
+          }, timeout)
         });
       }
     }
